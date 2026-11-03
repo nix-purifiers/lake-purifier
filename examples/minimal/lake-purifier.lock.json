@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "purifier": "lake",
+  "sdk": "a4e57745231513f0f4f069fbade033b4e826da0ad78a893360ed185a7b70c6ea",
+  "leanVersion": "4.35.0",
+  "project": {
+    "defaultTargets": [
+      "PurifierProof",
+      "proof"
+    ],
+    "dependencies": [
+      "aesop"
+    ],
+    "libraries": [
+      "PurifierProof"
+    ],
+    "name": "purifierProof",
+    "version": "0.1.0"
+  },
+  "extraInputs": [],
+  "inputs": {
+    "lake-manifest.json": {
+      "sha256": "803dc1429c2b45f00eb4328477006c1579bed129270aa15f980a4168966dbfdf",
+      "content": "{\"version\": \"1.3.0\",\n \"packagesDir\": \".lake/packages\",\n \"packages\":\n [{\"url\": \"https://github.com/leanprover-community/aesop.git\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"\",\n   \"rev\": \"4a174c490d8707121c4a9290800489f105d85e07\",\n   \"name\": \"aesop\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"4a174c490d8707121c4a9290800489f105d85e07\",\n   \"inherited\": false,\n   \"configFile\": \"lakefile.toml\"},\n  {\"url\": \"https://github.com/leanprover-community/batteries\",\n   \"type\": \"git\",\n   \"subDir\": null,\n   \"scope\": \"leanprover-community\",\n   \"rev\": \"66e469188fe07963e5cf666c7d4433f45b8131c5\",\n   \"name\": \"batteries\",\n   \"manifestFile\": \"lake-manifest.json\",\n   \"inputRev\": \"v4.35.0\",\n   \"inherited\": true,\n   \"configFile\": \"lakefile.toml\"}],\n \"name\": \"purifierProof\",\n \"lakeDir\": \".lake\",\n \"fixedToolchain\": false}\n"
+    },
+    "lakefile.toml": {
+      "sha256": "1097446f21c1702b5110196f6459222a934bb227e6bfe566a52fc11832d8efac",
+      "content": "name = \"purifierProof\"\nversion = \"0.1.0\"\ndefaultTargets = [\"PurifierProof\", \"proof\"]\n[[lean_lib]]\nname = \"PurifierProof\"\n[[lean_exe]]\nname = \"proof\"\nroot = \"Main\"\n[[require]]\nname = \"aesop\"\ngit = \"https://github.com/leanprover-community/aesop.git\"\nrev = \"4a174c490d8707121c4a9290800489f105d85e07\"\n"
+    },
+    "lean-toolchain": {
+      "sha256": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
+      "content": "leanprover/lean4:v4.35.0\n"
+    }
+  },
+  "entries": [
+    {
+      "path": "git/aesop",
+      "hash": "sha256-ZKoq/n59JAt7TJgb4yVFsiMdIvqTlGuuz/TnU95NMdA=",
+      "git": {
+        "url": "https://github.com/leanprover-community/aesop.git",
+        "rev": "4a174c490d8707121c4a9290800489f105d85e07",
+        "submodules": false,
+        "leaveDotGit": false,
+        "commitObject": null
+      }
+    },
+    {
+      "path": "git/batteries",
+      "hash": "sha256-NwqmoIl8Ph79liBor3ZaIgJYtA4tXZI0KWMLsd433UE=",
+      "git": {
+        "url": "https://github.com/leanprover-community/batteries",
+        "rev": "66e469188fe07963e5cf666c7d4433f45b8131c5",
+        "submodules": false,
+        "leaveDotGit": false,
+        "commitObject": null
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "name": "aesop",
+      "entry": "git/aesop",
+      "native": {
+        "defaultTargets": [
+          "Aesop"
+        ],
+        "dependencies": [
+          "batteries"
+        ],
+        "libraries": [
+          "Aesop",
+          "AesopTest"
+        ],
+        "name": "aesop",
+        "version": "0.0.0"
+      },
+      "targets": [
+        "Aesop:static"
+      ]
+    },
+    {
+      "name": "batteries",
+      "entry": "git/batteries",
+      "native": {
+        "defaultTargets": [
+          "Batteries",
+          "runLinter"
+        ],
+        "dependencies": [],
+        "libraries": [
+          "Batteries",
+          "BatteriesTest"
+        ],
+        "name": "batteries",
+        "version": "0.0.0"
+      },
+      "targets": [
+        "Batteries:static"
+      ]
+    }
+  ]
+}

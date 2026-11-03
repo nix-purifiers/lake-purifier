@@ -1,0 +1,7 @@
+result*
+.lake/
+.lake-purifier/
+__pycache__/
+*.pyc
+*.log
+cli

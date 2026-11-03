@@ -1,0 +1,12 @@
+name = "purifierProof"
+version = "0.1.0"
+defaultTargets = ["PurifierProof", "proof"]
+[[lean_lib]]
+name = "PurifierProof"
+[[lean_exe]]
+name = "proof"
+root = "Main"
+[[require]]
+name = "aesop"
+git = "https://github.com/leanprover-community/aesop.git"
+rev = "4a174c490d8707121c4a9290800489f105d85e07"
