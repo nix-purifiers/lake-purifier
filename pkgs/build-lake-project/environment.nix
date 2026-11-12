@@ -53,7 +53,7 @@ let
           export LEAN_SYSROOT=${lean4}
           export LEAN_CC=${gcc}/bin/cc
           ${nativeInspector}/bin/lake-inspect "$PWD" > "$TMPDIR/native.json"
-          ${python3}/bin/python3 ${../lake_purifier/check-metadata.py} ${writeText "lake-node.json" (builtins.toJSON node.native)} "$TMPDIR/native.json"
+          ${python3}/bin/python3 ${../../lake_purifier/check-metadata.py} ${writeText "lake-node.json" (builtins.toJSON node.native)} "$TMPDIR/native.json"
         '';
         postConfigure = "export LEAN_NUM_THREADS=2";
       };

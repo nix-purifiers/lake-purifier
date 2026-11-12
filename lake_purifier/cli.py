@@ -19,7 +19,7 @@ def realize(root, companion, target="environment"):
     result = run(
         [
             "nix-build",
-            HERE / "nix/realize.nix",
+            HERE / "pkgs/build-lake-project/realize.nix",
             "--argstr",
             "project",
             root,

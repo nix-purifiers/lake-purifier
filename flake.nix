@@ -19,13 +19,13 @@
       forAll = nixpkgs.lib.genAttrs systems;
       overlay = final: prev: {
         lake-purifier = final.lib.makeScope final.newScope (scope: {
-          nativeInspector = scope.callPackage ./nix/native.nix { };
-          sdkVersion = import ./nix/sdk-version.nix { nixpkgsSrc = nixpkgs; };
-          cli = scope.callPackage ./nix/cli.nix {
+          nativeInspector = scope.callPackage ./pkgs/build-lake-project/native.nix { };
+          sdkVersion = import ./pkgs/build-lake-project/sdk-version.nix { nixpkgsSrc = nixpkgs; };
+          cli = scope.callPackage ./pkgs/cli/default.nix {
             nixpkgsSrc = nixpkgs;
             purifierSrc = purifier;
           };
-          buildLeanProject = scope.callPackage ./nix/build-project.nix {
+          buildLeanProject = scope.callPackage ./pkgs/build-lake-project/default.nix {
             purifier = import (purifier + "/nix/lib") { inherit (final) lib; };
           };
         });
@@ -44,7 +44,7 @@
         cli = self.packages.${system}.default;
         sdk = (pkgsFor system).lean4;
       });
-      lib.lake-purifier.readLock = import ./nix/read-lock.nix { lib = nixpkgs.lib; };
+      lib.lake-purifier = (nixpkgs.lib.extend (import ./lib-overlays/default)).lake-purifier;
       apps = forAll (system: {
         default = {
           type = "app";
