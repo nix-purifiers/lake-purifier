@@ -24,7 +24,9 @@
   installPhase ? null,
 }:
 let
-  lock = purifier.checkLock (import ./read-lock.nix { inherit lib; } { inherit src lockFile; });
+  lock = purifier.checkLock (
+    import ../../lib-overlays/default/read-lock.nix { inherit lib; } { inherit src lockFile; }
+  );
   deps = import ./environment.nix (builtins.removeAttrs scope [
     "gnutar"
     "gzip"
@@ -69,7 +71,7 @@ let
         export LEAN_SYSROOT=${lean4}
         export LEAN_CC=${gcc}/bin/cc
         ${nativeInspector}/bin/lake-inspect "$PWD" > "$TMPDIR/native.json"
-        ${python3}/bin/python3 ${../lake_purifier/check-metadata.py} ${expected} "$TMPDIR/native.json"
+        ${python3}/bin/python3 ${../../lake_purifier/check-metadata.py} ${expected} "$TMPDIR/native.json"
       '';
       postConfigure = "export LEAN_NUM_THREADS=2";
     }

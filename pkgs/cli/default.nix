@@ -20,14 +20,14 @@
 stdenvNoCC.mkDerivation {
   pname = "lake-purifier";
   version = "0.1.0";
-  src = ../.;
+  src = ../..;
   nativeBuildInputs = [ makeWrapper ];
   dontBuild = true;
   installPhase = ''
     mkdir -p "$out/bin" "$out/lib/lake-purifier"
-    cp -r lake_purifier nix "$out/lib/lake-purifier/"
+    cp -r lake_purifier pkgs lib-overlays "$out/lib/lake-purifier/"
     install -m755 bin/lake-purifier "$out/bin/lake-purifier"
-    substituteInPlace "$out/lib/lake-purifier/nix/realize.nix" --replace-fail '@nixpkgs@' '${nixpkgsSrc}' --replace-fail '@purifier@' '${purifierSrc}'
+    substituteInPlace "$out/lib/lake-purifier/pkgs/build-lake-project/realize.nix" --replace-fail '@nixpkgs@' '${nixpkgsSrc}' --replace-fail '@purifier@' '${purifierSrc}'
     wrapProgram "$out/bin/lake-purifier" \
       --prefix PATH : ${
         lib.makeBinPath [
