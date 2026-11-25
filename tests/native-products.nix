@@ -1,7 +1,11 @@
-{ pkgs }:
+{
+  pkgs,
+  src ? ./fixtures/native,
+  expected ? 41,
+}:
 let
   product = pkgs.lake-purifier.buildLeanProject {
-    src = ./fixtures/native;
+    inherit src;
     nativeProducts.Native = {
       target = "foreign";
       library = ".lake/build/lib/libnativeProjectionProof_ffi.so";
@@ -27,12 +31,12 @@ pkgs.runCommand "lake-native-foreign-consumers"
     ];
   }
   ''
-    python ${./native-consumers.py} ${product.projections.native}/catalog.json
-    cc ${./native-consumer.c} -I${producer}/include/lake-native/Native ${library} -o consume
+    python ${./native-consumers.py} ${product.projections.native}/catalog.json ${toString expected}
+    cc ${./native-consumer.c} -DEXPECTED=${toString expected} -I${producer}/include/lake-native/Native ${library} -o consume
     ./consume
     cp ${./NativeConsumer.java} NativeConsumer.java
     javac --enable-preview --release 21 NativeConsumer.java
-    java --enable-preview --enable-native-access=ALL-UNNAMED NativeConsumer ${library}
+    java --enable-preview --enable-native-access=ALL-UNNAMED NativeConsumer ${library} ${toString expected}
     mkdir -p "$out"
     cp ${producer}/nix-support/lake-native/verified-products.json "$out/"
   ''
