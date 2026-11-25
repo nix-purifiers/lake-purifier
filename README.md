@@ -134,7 +134,11 @@ retained under `nix-support/lake-native` before the generic installation removes
 its working copies.
 
 Initialize before calling the exported API, use that native thread for calls,
-and keep the library loaded for the process lifetime. Callers supply compatible
+and keep the library loaded for the process lifetime. Linux Python loaders can
+use `os.RTLD_NOW | os.RTLD_NODELETE`; in particular, CFFI's normal automatic
+`dlclose` must not unload the Lean runtime during Python shutdown. Use a Python
+from the same Nix environment as the native library so its glibc supports the
+original Lean SDK. Callers supply compatible
 signatures and manage ownership of Lean values crossing their C API. Loading
 does not initialize the runtime automatically. The current consumer fixture
 uses unboxed `UInt32` values and allocation-heavy Lean lists; it does not prove
