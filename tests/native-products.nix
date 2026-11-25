@@ -16,6 +16,10 @@ let
 in
 pkgs.runCommand "lake-native-foreign-consumers"
   {
+    passthru = {
+      inherit producer;
+      projection = product.projections.native;
+    };
     nativeBuildInputs = [
       python
       pkgs.gcc
