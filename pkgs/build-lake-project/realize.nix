@@ -4,6 +4,7 @@
   target ? "environment",
   sdk ? null,
   profile ? false,
+  sharedDependencies ? false,
 }:
 let
   nixpkgsSrc = /. + "@nixpkgs@";
@@ -14,6 +15,7 @@ let
   build = pkgs.callPackage ./default.nix { inherit purifier nativeInspector sdkVersion; } {
     src = /. + project;
     lockFile = /. + companion;
+    inherit sharedDependencies;
   };
   output =
     if target == "environment" then

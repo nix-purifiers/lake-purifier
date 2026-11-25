@@ -12,10 +12,10 @@ from .capture import capture
 from .common import HERE, environment, load, locate, run
 
 
-def realize(root, companion, target="environment"):
+def realize(root, companion, target="environment", shared_dependencies=False):
     state = root / ".lake-purifier"
     state.mkdir(exist_ok=True)
-    profile = state / (target + "-profile")
+    profile = state / (target + ("-shared" if shared_dependencies else "") + "-profile")
     result = run(
         [
             "nix-build",
@@ -32,6 +32,9 @@ def realize(root, companion, target="environment"):
             "--argstr",
             "sdk",
             os.environ["LAKE_PURIFIER_SDK"],
+            "--arg",
+            "sharedDependencies",
+            "true" if shared_dependencies else "false",
             "--arg",
             "profile",
             "true",
@@ -81,7 +84,16 @@ def native(args):
         raise ValueError(
             "Locked Lake resolution cannot be overridden; run lake-purifier lock --update"
         )
-    env_file = realize(root, companion)
+    metadata = json.loads(run(
+        [os.environ["LAKE_PURIFIER_NATIVE_PRODUCTS_INSPECTOR"], root],
+        capture_output=True, text=True, env=environment(),
+    ).stdout)
+    shared = any(arg.endswith(":shared") for arg in args) or any(
+        library["defaultShared"] and (
+            library["name"] in args or library["name"] in metadata["defaultTargets"]
+        ) for library in metadata["libraries"]
+    )
+    env_file = realize(root, companion, shared_dependencies=shared)
     env_data = json.loads(env_file.read_text())
     digest = hashlib.sha256(env_file.read_bytes()).hexdigest()
     session = root / ".lake-purifier" / digest

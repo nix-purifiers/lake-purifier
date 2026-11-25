@@ -20,6 +20,9 @@
       overlay = final: prev: {
         lake-purifier = final.lib.makeScope final.newScope (scope: {
           nativeInspector = scope.callPackage ./pkgs/build-lake-project/native.nix { };
+          nativeProductsInspector =
+            scope.callPackage ./pkgs/build-lake-project/native-products-inspector.nix
+              { };
           sdkVersion = import ./pkgs/build-lake-project/sdk-version.nix { nixpkgsSrc = nixpkgs; };
           cli = scope.callPackage ./pkgs/cli/default.nix {
             nixpkgsSrc = nixpkgs;
@@ -63,6 +66,12 @@
           };
         in
         {
+          native = import ./tests/native-products.nix { inherit pkgs; };
+          native-revision = import ./tests/native-products.nix {
+            inherit pkgs;
+            src = ./tests/fixtures/native-revision;
+            expected = 42;
+          };
           inherit (build.packages) environment project;
           release = build.release;
           cli = self.packages.${system}.default;
