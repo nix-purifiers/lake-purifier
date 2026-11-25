@@ -13,6 +13,7 @@
   gzip,
   cacert,
   nativeInspector,
+  nativeProductsInspector,
   sdkVersion,
   nixpkgsSrc,
   purifierSrc,
@@ -43,6 +44,7 @@ stdenvNoCC.mkDerivation {
         ]
       } \
       --set-default SSL_CERT_FILE ${cacert}/etc/ssl/certs/ca-bundle.crt \
+      --set LAKE_PURIFIER_NATIVE_PRODUCTS_INSPECTOR ${nativeProductsInspector}/bin/lake-native-products \
       --set-default LAKE_PURIFIER_GH ${gh}/bin/gh \
       --set LAKE_PURIFIER_NATIVE ${lean4}/bin/lake \
       --set LAKE_PURIFIER_LEAN ${lean4} \

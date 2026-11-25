@@ -15,6 +15,7 @@
   lock,
   fetchers ? { },
   nativeBuildInputs ? [ ],
+  sharedLibraries ? false,
 }:
 let
   checked = purifier.checkLock lock;
@@ -47,7 +48,13 @@ let
         '';
         leanPackageName = node.name;
         leanDeps = map (name: packages.${name}) node.native.dependencies;
-        buildTargets = node.targets;
+        buildTargets =
+          node.targets
+          ++ lib.optionals sharedLibraries (
+            map (target: lib.removeSuffix ":static" target + ":shared") (
+              builtins.filter (target: lib.hasSuffix ":static" target) node.targets
+            )
+          );
         inherit nativeBuildInputs;
         preConfigure = ''
           export LEAN_SYSROOT=${lean4}
